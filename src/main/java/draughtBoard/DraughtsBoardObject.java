@@ -1,6 +1,4 @@
-package game;
-
-import comments.TextInfo;
+package draughtBoard;
 
 public class DraughtsBoardObject {
     private String name;
@@ -8,7 +6,7 @@ public class DraughtsBoardObject {
     private boolean isPawn;
     private boolean isSquare;
     private boolean isPlayer1;
-    private boolean isPlayer2;
+    private boolean comp;
     private boolean isKing;
     private int x;
     private int y;
@@ -20,9 +18,14 @@ public class DraughtsBoardObject {
         this.isPawn = isPawn;
         this.isSquare = isSquare;
         this.isPlayer1 = isPlayer1;
-        this.isPlayer2 = isPlayer2;
+        this.comp = isPlayer2;
         this.isKing = false;
         this.x = x;
         this.y = y;
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
     }
 }
