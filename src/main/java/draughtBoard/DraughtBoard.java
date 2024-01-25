@@ -166,6 +166,10 @@ public class DraughtBoard {
         }
     }
 
+    public void compulsoryMove(int pawnRow, int pawnColumn, int competitorRow, int competitorColumn){
+        if(){}
+    }
+
 
     public void removePawn(int row, int column) { //zamiana pionka w puste miejsce
         board[row][column].setIsPawn(false);
