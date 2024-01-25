@@ -5,23 +5,63 @@ public class DraughtsBoardObject {
     private boolean isAvailable;
     private boolean isPawn;
     private boolean isSquare;
-    private boolean isPlayer1;
-    private boolean comp;
+    private boolean isPlayer;
+    private boolean isComp;
     private boolean isKing;
     private int x;
     private int y;
 
 
-    public DraughtsBoardObject(String name, boolean isAvailable, boolean isPawn, boolean isSquare, boolean isPlayer1, boolean isPlayer2, int x, int y) {
+    public DraughtsBoardObject(String name, boolean isAvailable, boolean isPawn, boolean isSquare, boolean isPlayer, boolean isComp, int x, int y) {
         this.name = name;
         this.isAvailable = isAvailable;
         this.isPawn = isPawn;
         this.isSquare = isSquare;
-        this.isPlayer1 = isPlayer1;
-        this.comp = isPlayer2;
+        this.isPlayer = isPlayer;
+        this.isComp = isComp;
         this.isKing = false;
         this.x = x;
         this.y = y;
+    }
+
+    public void setIsPawn(boolean pawn) {
+        isPawn = pawn;
+    }
+
+    public void setIsSquare(boolean square) {
+        isSquare = square;
+    }
+
+    public boolean isPawn() {
+        return isPawn;
+    }
+
+    public boolean isSquare() {
+        return isSquare;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean isPlayer() {
+        return isPlayer;
+    }
+
+    public boolean isComp() {
+        return isComp;
+    }
+
+    public void setIsPlayer(boolean player) {
+        isPlayer = player;
+    }
+
+    public void setIsComp(boolean comp) {
+        this.isComp = comp;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
     }
 
     @Override
