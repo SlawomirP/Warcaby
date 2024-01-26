@@ -146,32 +146,62 @@ public class DraughtBoard {
         }
     }
 
-    public void playerMove(int pawnRow, int pawnColumn, int squareRow, int squareColumn) { // ruch - zamiana pionka w pole i na odwrot
-        //ruch w przypadku pustego pola---------------------------------------------------------
-        if (board[pawnRow][pawnColumn].isPlayer() && board[squareRow][squareColumn].isSquare() && board[squareRow][squareColumn].isAvailable() && (squareRow == pawnRow-1) && ((squareColumn == (pawnColumn-1))||((squareColumn == (pawnColumn+1))))){
-
-            //pole pionka
-            board[pawnRow][pawnColumn].setIsPawn(false); // to nie jest juz pionek
-            board[pawnRow][pawnColumn].setIsPlayer(false); // to nie jest juz player
-            board[pawnRow][pawnColumn].setIsSquare(true); //teraz jest polem
-            board[pawnRow][pawnColumn].setName(BoardText.AVAILABLE_SQUARE);//wygląd pola
-
-            //pole - pole staje sie pionkiem i ma wyglad gracza
-            board[squareRow][squareColumn].setIsPawn(true);
-            board[squareRow][squareColumn].setIsSquare(false);
-            board[squareRow][squareColumn].setName(BoardText.PLAYER_MARK);
-
+    public void playerMove(int pawnRow, int pawnColumn, int squareRow, int squareColumn) { // ruch przy pustym nastepnym polu - zamiana pionka w pole i pola w pionek
+        if (board[pawnRow][pawnColumn].isPlayer() && board[squareRow][squareColumn].isSquare() && board[squareRow][squareColumn].isAvailable() && (squareRow == pawnRow - 1) && ((squareColumn == (pawnColumn - 1)) || ((squareColumn == (pawnColumn + 1))))) {
+            pawnToSquare(pawnRow, pawnColumn);//pionek playera zamienia sie w pole
+            squareToPlayer(squareRow, squareColumn); //pole - pole staje sie pionkiem i ma wyglad gracza
         } else {
             System.err.println(BoardText.NOT_ALLOWED_OPERATION);
         }
     }
 
-    public void compulsoryMove(int pawnRow, int pawnColumn, int competitorRow, int competitorColumn){
-        if(){}
+    public void compulsoryPlayerMove(int pawnRow, int pawnColumn) {
+        //opcja comp lewy gorny
+        if (board[pawnColumn - 1][pawnRow - 1].isComp() && (board[pawnColumn - 2][pawnRow - 2]).isSquare() && board[pawnColumn - 2][pawnRow - 2].isAvailable()) {
+            pawnToSquare(pawnRow, pawnColumn); //pionek playera zamienia sie w pole
+            pawnToSquare((pawnColumn - 1), pawnRow - 1); //pionek compa zamienia sie w pole
+            squareToPlayer(pawnColumn - 2, pawnRow - 2); // pole zamiania sie w pionek playera
+        }
+        //opcja comp lewy dolny
+        if (board[pawnColumn - 1][pawnRow + 1].isComp() && (board[pawnColumn - 2][pawnRow + 2]).isSquare() && board[pawnColumn - 2][pawnRow + 2].isAvailable()) {
+            pawnToSquare(pawnRow, pawnColumn);
+            pawnToSquare((pawnColumn - 1), pawnRow + 1);
+            squareToPlayer(pawnColumn - 2, pawnRow + 2);
+        }
+        //opcja comp prawy gorny
+        if (board[pawnColumn + 1][pawnRow - 1].isComp() && (board[pawnColumn + 2][pawnRow - 2]).isSquare() && board[pawnColumn + 2][pawnRow - 2].isAvailable()) {
+            pawnToSquare(pawnRow, pawnColumn);
+            pawnToSquare((pawnColumn + 1), pawnRow - 1);
+            squareToPlayer(pawnColumn + 2, pawnRow - 2);
+        }
+        //opcja comp prawy dolny
+        if (board[pawnColumn + 1][pawnRow + 1].isComp() && (board[pawnColumn + 2][pawnRow + 2]).isSquare() && board[pawnColumn + 2][pawnRow + 2].isAvailable()) {
+            pawnToSquare(pawnRow, pawnColumn);
+            pawnToSquare((pawnColumn + 1), pawnRow + 1);
+            squareToPlayer(pawnColumn + 2, pawnRow + 2);
+        }
     }
 
 
-    public void removePawn(int row, int column) { //zamiana pionka w puste miejsce
+    private void squareToPlayer(int squareRow, int squareColumn) {
+        board[squareRow][squareColumn].setIsPawn(true);
+        board[squareRow][squareColumn].setIsPlayer(true);
+        board[squareRow][squareColumn].setIsSquare(false);
+        board[squareRow][squareColumn].setIsComp(false);
+        board[squareRow][squareColumn].setName(BoardText.PLAYER_MARK);
+    }
+
+    private void pawnToSquare(int pawnRow, int pawnColumn) {
+        board[pawnRow][pawnColumn].setIsSquare(true); //teraz jest polem
+        board[pawnRow][pawnColumn].setIsPawn(false); // to nie jest juz pionek
+        board[pawnRow][pawnColumn].setIsPlayer(false); // to nie jest juz player
+        board[pawnRow][pawnColumn].setIsComp(false); // nie comp
+        board[pawnRow][pawnColumn].setName(BoardText.AVAILABLE_SQUARE);//wygląd pola
+    }
+
+
+    ///tymczasowe metody do usuniecia---------------------------------------------------------------------
+    public void tempRemovePawn(int row, int column) { //zamiana pionka w puste miejsce
         board[row][column].setIsPawn(false);
         board[row][column].setIsSquare(true);
         board[row][column].setIsPlayer(false);
@@ -180,7 +210,7 @@ public class DraughtBoard {
 
     }
 
-    public void tempAdd(int row,int column){
+    public void tempAdd(int row, int column) {
         board[row][column] = new DraughtsBoardObject(BoardText.COMP_MARK, true, true, false, false, true, row, column);
     }
 }
