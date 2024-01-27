@@ -8,11 +8,9 @@ public class DraughtsBoardObject {
     private boolean isPlayer;
     private boolean isComp;
     private boolean isKing;
-    private int x;
-    private int y;
 
 
-    public DraughtsBoardObject(String name, boolean isAvailable, boolean isPawn, boolean isSquare, boolean isPlayer, boolean isComp, int x, int y) {
+    public DraughtsBoardObject(String name, boolean isAvailable, boolean isPawn, boolean isSquare, boolean isPlayer, boolean isComp) {
         this.name = name;
         this.isAvailable = isAvailable;
         this.isPawn = isPawn;
@@ -20,8 +18,6 @@ public class DraughtsBoardObject {
         this.isPlayer = isPlayer;
         this.isComp = isComp;
         this.isKing = false;
-        this.x = x;
-        this.y = y;
     }
 
     public void setIsPawn(boolean pawn) {

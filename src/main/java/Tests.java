@@ -8,15 +8,21 @@ public class Tests {
 
         b.printBoard();
 
-        System.out.println("---------------------------");
+        System.out.println("--------------po dodaniu-------------");
 
-        b.tempAdd(5,4);
+        b.tempRemovePawn(2,1);
+        b.tempCompPawnAdd(5,4);
+        b.tempCompPawnAdd(3,2);
 
         b.printBoard();
-        b.playerMove(6,1,5,2);
+
+        System.out.println("--------------po biciu-------------");
+
+        b.compulsoryPlayerMove(6,5);
 
         b.printBoard();
-//        System.out.println("---------------------------");
+
+
 //
 //        b.playerMove(5,2,6,1);
 //
