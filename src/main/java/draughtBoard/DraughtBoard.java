@@ -397,4 +397,7 @@ public class DraughtBoard {
     public void tempCompPawnAdd(int row, int column) {
         board[row][column] = createCompPawn();
     }
+    public void setCompPawnAmount(int nr){
+        this.numberOfCompPawns = nr;
+    }
 }

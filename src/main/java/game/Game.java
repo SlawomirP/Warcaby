@@ -24,60 +24,85 @@ public class Game {
 
         System.out.println(BoardText.RULES);
 
-//        board.tempRemovePawn(3,4);
-//        board.tempRemovePawn(3,6);
-//        board.tempCompPawnAdd(4,5);
+        board.tempRemovePawn(1,2);
+        board.tempRemovePawn(1,4);
+        board.tempRemovePawn(1,6);
+        board.tempRemovePawn(1,8);
+        board.tempRemovePawn(2,1);
+        board.tempRemovePawn(2,3);
+        board.tempRemovePawn(2,5);
+        board.tempRemovePawn(2,7);
+        board.tempRemovePawn(3,2);
+        board.tempRemovePawn(3,6);
+        board.tempRemovePawn(3,8);
+
+        board.setCompPawnAmount(1);
+
         board.printBoard();
 
 
-        while (board.getNumberOfPlayerPawns() != 0 || board.getNumberOfCompPawns() != 0) {
+        while (board.getNumberOfPlayerPawns() != 0 && board.getNumberOfCompPawns() != 0) {
 
             //częśc playera
             System.out.println("--------------- moj ruch");
 
-            tryToCompulsoryBeat(); // sprawdzam mozliwosc bicia dla playera
+            if(board.getNumberOfCompPawns() != 0){
+                tryToCompulsoryBeat(); // sprawdzam mozliwosc bicia dla playera
 
-            if(wasCompulsoryForPlayer){// jezeli bylo bicie to wyswietl plansze
-                board.printBoard();}
+                if (wasCompulsoryForPlayer) {// jezeli bylo bicie to wyswietl plansze
+                    board.printBoard();
+                }
 
-            if(!wasCompulsoryForPlayer){ // jezeli nie bylo auto bicia to kolejka gracza
-                System.out.println(BoardText.PLAYER_INSTRUCTION_PAWN);
-                convertToPawnCords();
-                System.out.println(BoardText.PLAYER_INSTRUCTION_SQUARE);
-                convertToSquareCords();
-                board.playerMove(playerPawnRow, playerPawnColumn,playerSquareRow,playerSquareColumn);
-                board.printBoard();
+                if (!wasCompulsoryForPlayer) { // jezeli nie bylo auto bicia to kolejka gracza
+                    System.out.println(BoardText.PLAYER_INSTRUCTION_PAWN);
+                    convertToPawnCords();
+                    System.out.println(BoardText.PLAYER_INSTRUCTION_SQUARE);
+                    convertToSquareCords();
+                    board.playerMove(playerPawnRow, playerPawnColumn, playerSquareRow, playerSquareColumn);
+                    board.printBoard();
+                }
+                wasCompulsoryForPlayer = false;// reset stanu
             }
-            wasCompulsoryForPlayer = false;// reset stanu
+
+
 
             System.out.println("---------------komp");
 
             // kod dla ruchu komputera
-            board.addIndexesToPawn(); //aktualizacja indexów dla pioknów
-            List<DraughtsBoardObject> temp = board.getCompPawnsList(); //lista z pionkami kompa
+            if(board.getNumberOfCompPawns() != 0){
+                board.addIndexesToPawn(); //aktualizacja indexów dla pioknów
+                List<DraughtsBoardObject> temp = board.getCompPawnsList(); //lista z pionkami kompa
 
-            compCompulsoryBeat(); // komp sprawdza czy jest musowe bicie
-            if(wasCompulsoryForComp){ // jezeli jest to wyswietl  tablice
-                board.printBoard();}
+                compCompulsoryBeat(); // komp sprawdza czy jest musowe bicie
+                if (wasCompulsoryForComp) { // jezeli jest to wyswietl  tablice
+                    board.printBoard();
+                }
 
-            if (!wasCompulsoryForComp) {
-                do {
-                    getCordsRandomCompPawn(temp);
-                } while (!board.compMove(compPawnRow, compPawnColumn));
-                board.printBoard();
+                if (!wasCompulsoryForComp) {
+                    do {
+                        getCordsRandomCompPawn(temp);
+                    } while (!board.compMove(compPawnRow, compPawnColumn));
+                    board.printBoard();
+                }
+                wasCompulsoryForComp = false;
             }
-            wasCompulsoryForComp = false;
 
-            System.out.println();
+
+            System.out.println("wynik player: " + board.getNumberOfPlayerPawns());
+            System.out.println("wynik komp: " + board.getNumberOfCompPawns());
         }
+
+        System.out.println("bye bye");
 
     }
 
     private void compCompulsoryBeat() {
-        for (int i = 0; i < board.getBoard().length; i++) {
-            for (int j = 0; j < board.getBoard().length; j++) {
-                if (board.getBoard()[i][j].isComp() && board.compulsoryCompMove(i, j)){
-                    wasCompulsoryForComp = true;
+        if (board.getBoard().length != 0) {
+            for (int i = 0; i < board.getBoard().length; i++) {
+                for (int j = 0; j < board.getBoard().length; j++) {
+                    if (board.getBoard()[i][j].isComp() && board.compulsoryCompMove(i, j)) {
+                        wasCompulsoryForComp = true;
+                    }
                 }
             }
         }
@@ -91,10 +116,12 @@ public class Game {
 
 
     private void tryToCompulsoryBeat() {
-        for (int i = 0; i < board.getBoard().length; i++) {
-            for (int j = 0; j < board.getBoard().length; j++) {
-                if (board.getBoard()[i][j].isPlayer() && board.compulsoryPlayerMove(i,j)) {
-                    wasCompulsoryForPlayer = true;
+        if (board.getBoard().length != 0) {
+            for (int i = 0; i < board.getBoard().length; i++) {
+                for (int j = 0; j < board.getBoard().length; j++) {
+                    if (board.getBoard()[i][j].isPlayer() && board.compulsoryPlayerMove(i, j)) {
+                        wasCompulsoryForPlayer = true;
+                    }
                 }
             }
         }
@@ -113,8 +140,12 @@ public class Game {
     }
 
     private int getRandomNumber(List<DraughtsBoardObject> list) {
+        int temp = 0;
         Random random = new Random();
-        return random.nextInt(list.size());
+        if (list.size() != 0) {
+            temp = random.nextInt(list.size());
+        }
+        return temp;
     }
 
     private DraughtsBoardObject getRandomPawn(List<DraughtsBoardObject> list) {
