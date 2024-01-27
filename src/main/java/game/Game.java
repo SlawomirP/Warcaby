@@ -37,10 +37,10 @@ public class Game {
 
             tryToCompulsoryBeat(); // sprawdzam mozliwosc bicia dla playera
 
-            if(wasCompulsoryForPlayer){
+            if(wasCompulsoryForPlayer){// jezeli bylo bicie to wyswietl plansze
                 board.printBoard();}
 
-            if(!wasCompulsoryForPlayer){
+            if(!wasCompulsoryForPlayer){ // jezeli nie bylo auto bicia to kolejka gracza
                 System.out.println(BoardText.PLAYER_INSTRUCTION_PAWN);
                 convertToPawnCords();
                 System.out.println(BoardText.PLAYER_INSTRUCTION_SQUARE);
@@ -48,8 +48,7 @@ public class Game {
                 board.playerMove(playerPawnRow, playerPawnColumn,playerSquareRow,playerSquareColumn);
                 board.printBoard();
             }
-
-            wasCompulsoryForPlayer = false;
+            wasCompulsoryForPlayer = false;// reset stanu
 
             System.out.println("---------------komp");
 
@@ -57,17 +56,9 @@ public class Game {
             board.addIndexesToPawn(); //aktualizacja indexów dla pioknów
             List<DraughtsBoardObject> temp = board.getCompPawnsList(); //lista z pionkami kompa
 
-            for (int i = 0; i < board.getBoard().length; i++) {
-                for (int j = 0; j < board.getBoard().length; j++) {
-                    if (board.getBoard()[i][j].isComp() && board.compulsoryCompMove(i, j)){
-                        wasCompulsoryForComp = true;
-                    }
-                }
-            }
-            if(wasCompulsoryForComp){
+            compCompulsoryBeat(); // komp sprawdza czy jest musowe bicie
+            if(wasCompulsoryForComp){ // jezeli jest to wyswietl  tablice
                 board.printBoard();}
-
-//            System.err.println("status wasCompulsory1: " + wasCompulsoryForComp);
 
             if (!wasCompulsoryForComp) {
                 do {
@@ -75,18 +66,21 @@ public class Game {
                 } while (!board.compMove(compPawnRow, compPawnColumn));
                 board.printBoard();
             }
-
             wasCompulsoryForComp = false;
-//            System.err.println("status wasCompulsory2: " + wasCompulsoryForComp);
 
-
-
-//            convertToPawnCords();// zeby zatrzymac petle
-
-
+            System.out.println();
         }
 
+    }
 
+    private void compCompulsoryBeat() {
+        for (int i = 0; i < board.getBoard().length; i++) {
+            for (int j = 0; j < board.getBoard().length; j++) {
+                if (board.getBoard()[i][j].isComp() && board.compulsoryCompMove(i, j)){
+                    wasCompulsoryForComp = true;
+                }
+            }
+        }
     }
 
     private void getCordsRandomCompPawn(List<DraughtsBoardObject> temp) {
@@ -96,7 +90,7 @@ public class Game {
     }
 
 
-    private void tryToCompulsoryBeat() { // sprawdzam mozliwosc bicia dla pionkow playera
+    private void tryToCompulsoryBeat() {
         for (int i = 0; i < board.getBoard().length; i++) {
             for (int j = 0; j < board.getBoard().length; j++) {
                 if (board.getBoard()[i][j].isPlayer() && board.compulsoryPlayerMove(i,j)) {

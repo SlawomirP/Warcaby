@@ -162,10 +162,18 @@ public class DraughtBoard {
 
     public boolean compMove(int pawnRow, int pawnColumn) {
         boolean status = false;
+        // jezeli po lewej byloby zbicie odbij w prawo jezeli jest mozliwosc
+        if (board[pawnRow + 1][pawnColumn - 1].isSquare() && board[pawnRow + 1][pawnColumn - 1].isAvailable() && board[pawnRow + 2][pawnColumn - 2].isPlayer() && board[pawnRow + 1][pawnColumn + 1].isSquare() && board[pawnRow + 1][pawnColumn + 1].isAvailable()) {
+            status = compMoveToRight(pawnRow, pawnColumn);
+        }
+        // jezeli zbicie byloby po prawej
+        else if (board[pawnRow + 1][pawnColumn + 1].isSquare() && board[pawnRow + 1][pawnColumn + 1].isAvailable() && board[pawnRow + 2][pawnColumn + 2].isPlayer() && board[pawnRow + 1][pawnColumn - 1].isSquare() && board[pawnRow + 1][pawnColumn - 1].isAvailable()) {
+            status = compMoveToLeft(pawnRow, pawnColumn);
+        }
         //oba dostepne miejsca
-        if ((board[pawnRow + 1][pawnColumn - 1].isSquare() && board[pawnRow + 1][pawnColumn - 1].isAvailable()) && (board[pawnRow + 1][pawnColumn + 1].isSquare() && board[pawnRow + 1][pawnColumn + 1].isAvailable())) {
+        else if ((board[pawnRow + 1][pawnColumn - 1].isSquare() && board[pawnRow + 1][pawnColumn - 1].isAvailable()) && (board[pawnRow + 1][pawnColumn + 1].isSquare() && board[pawnRow + 1][pawnColumn + 1].isAvailable())) {
             int temp = getRandomNumber();
-            if(temp == 0){ // ruch w lewo
+            if (temp == 0) { // ruch w lewo
                 status = compMoveToLeft(pawnRow, pawnColumn);
             } else { // ruch w prawo
                 status = compMoveToRight(pawnRow, pawnColumn);
@@ -207,7 +215,7 @@ public class DraughtBoard {
             pawnToSquare((pawnRow - 1), pawnColumn - 1); //pionek compa zamienia sie w pole - dziala
             squareToPlayer(pawnRow - 2, pawnColumn - 2); // pole zamiania sie w pionek playera - dziala
             takeOffCompPawn();
-            compulsoryPlayerMove(pawnRow - 2, pawnColumn - 2); // na wypadek gdyby bicie bylo podwojne
+//            compulsoryPlayerMove(pawnRow - 2, pawnColumn - 2); // na wypadek gdyby bicie bylo podwojne
             status = true;
         }
         //opcja comp prawy górny
@@ -216,16 +224,16 @@ public class DraughtBoard {
             pawnToSquare((pawnRow - 1), pawnColumn + 1);
             squareToPlayer(pawnRow - 2, pawnColumn + 2);
             takeOffCompPawn();
-            compulsoryPlayerMove(pawnRow - 2, pawnColumn + 2);
+//            compulsoryPlayerMove(pawnRow - 2, pawnColumn + 2);
             status = true;
         }
         //opcja comp lewy dolny
-        else if (board[pawnRow + 1][pawnColumn - 1].isComp() && board[pawnRow + 2][pawnColumn - 2].isSquare() && board[pawnRow + 2][pawnColumn - 2].isAvailable()) {
+        if (board[pawnRow + 1][pawnColumn - 1].isComp() && board[pawnRow + 2][pawnColumn - 2].isSquare() && board[pawnRow + 2][pawnColumn - 2].isAvailable()) {
             pawnToSquare(pawnRow, pawnColumn);
             pawnToSquare((pawnRow + 1), pawnColumn - 1);
             squareToPlayer(pawnRow + 2, pawnColumn - 2);
             takeOffCompPawn();
-            compulsoryPlayerMove(pawnRow - 2, pawnColumn - 2);
+//            compulsoryPlayerMove(pawnRow - 2, pawnColumn - 2);
             status = true;
         }
         //opcja comp prawy dolny
@@ -234,12 +242,13 @@ public class DraughtBoard {
             pawnToSquare((pawnRow + 1), pawnColumn + 1);
             squareToPlayer(pawnRow + 2, pawnColumn + 2);
             takeOffCompPawn();
-            compulsoryPlayerMove(pawnRow + 2, pawnColumn + 2);
+//            compulsoryPlayerMove(pawnRow + 2, pawnColumn + 2);
             status = true;
         }
         return status;
     }
-    public boolean compulsoryCompMove(int pawnRow, int pawnColumn){
+
+    public boolean compulsoryCompMove(int pawnRow, int pawnColumn) {
         boolean status = false;
 
         //player w lewym górnym
@@ -252,7 +261,7 @@ public class DraughtBoard {
             compulsoryCompMove(pawnRow - 2, pawnColumn - 2); // na wypadek gdyby bicie bylo podwojne
         }
         //player w prawym gornym
-        else if (board[pawnRow - 1][pawnColumn + 1].isPlayer() && board[pawnRow - 2][pawnColumn + 2].isSquare() && board[pawnRow - 2][pawnColumn + 2].isAvailable()){
+        else if (board[pawnRow - 1][pawnColumn + 1].isPlayer() && board[pawnRow - 2][pawnColumn + 2].isSquare() && board[pawnRow - 2][pawnColumn + 2].isAvailable()) {
             status = true;
             pawnToSquare(pawnRow, pawnColumn);
             pawnToSquare((pawnRow - 1), pawnColumn + 1);
@@ -261,7 +270,7 @@ public class DraughtBoard {
             compulsoryCompMove(pawnRow - 2, pawnColumn + 2);
         }
         // player w lewym dolnym
-        else if (board[pawnRow + 1][pawnColumn - 1].isPlayer() && board[pawnRow + 2][pawnColumn - 2].isSquare() && board[pawnRow + 2][pawnColumn - 2].isAvailable()){
+        else if (board[pawnRow + 1][pawnColumn - 1].isPlayer() && board[pawnRow + 2][pawnColumn - 2].isSquare() && board[pawnRow + 2][pawnColumn - 2].isAvailable()) {
             status = true;
             pawnToSquare(pawnRow, pawnColumn);
             pawnToSquare((pawnRow + 1), pawnColumn - 1);
@@ -270,7 +279,7 @@ public class DraughtBoard {
             compulsoryCompMove(pawnRow + 2, pawnColumn - 2);
         }
         //player w prawym dolnym
-        else if (board[pawnRow + 1][pawnColumn + 1].isPlayer() && board[pawnRow + 2][pawnColumn + 2].isSquare() && board[pawnRow + 2][pawnColumn + 2].isAvailable()){
+        else if (board[pawnRow + 1][pawnColumn + 1].isPlayer() && board[pawnRow + 2][pawnColumn + 2].isSquare() && board[pawnRow + 2][pawnColumn + 2].isAvailable()) {
             status = true;
             pawnToSquare(pawnRow, pawnColumn);
             pawnToSquare((pawnRow + 1), pawnColumn + 1);
@@ -368,6 +377,7 @@ public class DraughtBoard {
             }
         }
     }
+
     private int getRandomNumber() {
         Random random = new Random();
         return random.nextInt(2);
@@ -383,6 +393,7 @@ public class DraughtBoard {
         board[row][column].setName(BoardText.AVAILABLE_SQUARE);
 
     }
+
     public void tempCompPawnAdd(int row, int column) {
         board[row][column] = createCompPawn();
     }
