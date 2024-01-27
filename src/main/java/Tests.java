@@ -1,36 +1,34 @@
 import draughtBoard.DraughtBoard;
+import draughtBoard.DraughtsBoardObject;
+
+import java.util.List;
+import java.util.Random;
 
 public class Tests {
 
     public static void main(String[] args) {
 
-        DraughtBoard b = new DraughtBoard();
+        Random random = new Random();
 
-        b.printBoard();
+        DraughtBoard board = new DraughtBoard();
+        board.addIndexesToPawn();
+        List<DraughtsBoardObject> temp = board.getCompPawnsList();
+        System.out.println("rozmiar listy" + temp.size());
 
-        System.out.println("--------------po dodaniu-------------");
-
-        b.tempRemovePawn(2,1);
-        b.tempCompPawnAdd(5,4);
-        b.tempCompPawnAdd(3,2);
-
-        b.printBoard();
-
-        System.out.println("--------------po biciu-------------");
-
-        b.compulsoryPlayerMove(6,5);
-
-        b.printBoard();
-
-
-//
-//        b.playerMove(5,2,6,1);
-//
-//        b.printBoard();
-
-//        b.playerMove(5,2,6,1);
-//
-//        b.printBoard();
+        for (int i = 0; i < 150; i++) {
+            System.out.print(getRandomNumber2() + "-");
+        }
+    }
+    private static int getRandomNumber(List list){
+        Random random = new Random();
+        return random.nextInt(list.size() );
+    }
+    private static int getRandomNumber2() {
+        Random random = new Random();
+        return random.nextInt(2);
     }
 
+
 }
+
+

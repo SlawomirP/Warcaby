@@ -1,10 +1,15 @@
 package draughtBoard;
 
-
 import comments.BoardText;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class DraughtBoard {
     public static final int SIZE = 10;
+    private int numberOfCompPawns = 12;
+    private int numberOfPlayerPawns = 12;
     private DraughtsBoardObject[][] board = new DraughtsBoardObject[SIZE][SIZE];
 
     public DraughtBoard() {
@@ -148,19 +153,59 @@ public class DraughtBoard {
 
     public void playerMove(int pawnRow, int pawnColumn, int squareRow, int squareColumn) { // ruch przy pustym nastepnym polu - zamiana pionka w pole i pola w pionek
         if (board[pawnRow][pawnColumn].isPlayer() && board[squareRow][squareColumn].isSquare() && board[squareRow][squareColumn].isAvailable() && (squareRow == pawnRow - 1) && ((squareColumn == (pawnColumn - 1)) || ((squareColumn == (pawnColumn + 1))))) {
-            pawnToSquare(pawnRow, pawnColumn);//pionek playera zamienia sie w pole
+            pawnToSquare(pawnRow, pawnColumn);//pionek zamienia sie w pole
             squareToPlayer(squareRow, squareColumn); //pole - pole staje sie pionkiem i ma wyglad gracza
         } else {
             System.err.println(BoardText.NOT_ALLOWED_OPERATION);
         }
     }
 
-    public void compulsoryPlayerMove(int pawnRow, int pawnColumn) {
+    public boolean compMove(int pawnRow, int pawnColumn) {
+        boolean status = false;
+        //oba dostepne miejsca
+        if ((board[pawnRow + 1][pawnColumn - 1].isSquare() && board[pawnRow + 1][pawnColumn - 1].isAvailable()) && (board[pawnRow + 1][pawnColumn + 1].isSquare() && board[pawnRow + 1][pawnColumn + 1].isAvailable())) {
+            int temp = getRandomNumber();
+            if(temp == 0){ // ruch w lewo
+                status = compMoveToLeft(pawnRow, pawnColumn);
+            } else { // ruch w prawo
+                status = compMoveToRight(pawnRow, pawnColumn);
+            }
+        }
+        //wolne pole po lewej
+        else if (board[pawnRow + 1][pawnColumn - 1].isSquare() && board[pawnRow + 1][pawnColumn - 1].isAvailable()) {
+            status = compMoveToLeft(pawnRow, pawnColumn);
+        }
+        //wolne po prawej
+        else if (board[pawnRow + 1][pawnColumn + 1].isSquare() && board[pawnRow + 1][pawnColumn + 1].isAvailable()) {
+            status = compMoveToRight(pawnRow, pawnColumn);
+        }
+        return status;
+    }
+
+    private boolean compMoveToRight(int pawnRow, int pawnColumn) {
+        boolean status;
+        pawnToSquare(pawnRow, pawnColumn);
+        squareToComp(pawnRow + 1, pawnColumn + 1);
+        status = true;
+        return status;
+    }
+
+    private boolean compMoveToLeft(int pawnRow, int pawnColumn) {
+        boolean status;
+        pawnToSquare(pawnRow, pawnColumn);
+        squareToComp(pawnRow + 1, pawnColumn - 1);
+        status = true;
+        return status;
+    }
+
+
+    public void compulsoryPlayerMove(int pawnRow, int pawnColumn) { // obowiazkowe zbicie pionka  - idzie z auto dla kazdej strony
         //opcja comp lewy gorny
         if (board[pawnRow - 1][pawnColumn - 1].isComp() && board[pawnRow - 2][pawnColumn - 2].isSquare() && board[pawnRow - 2][pawnColumn - 2].isAvailable()) {
             pawnToSquare(pawnRow, pawnColumn); //pionek playera zamienia sie w pole - dziala
             pawnToSquare((pawnRow - 1), pawnColumn - 1); //pionek compa zamienia sie w pole - dziala
             squareToPlayer(pawnRow - 2, pawnColumn - 2); // pole zamiania sie w pionek playera - dziala
+            takeOffCompPawn();
             compulsoryPlayerMove(pawnRow - 2, pawnColumn - 2); // na wypadek gdyby bicie bylo podwojne
         }
         //opcja comp prawy górny
@@ -168,6 +213,7 @@ public class DraughtBoard {
             pawnToSquare(pawnRow, pawnColumn);
             pawnToSquare((pawnRow - 1), pawnColumn + 1);
             squareToPlayer(pawnRow - 2, pawnColumn + 2);
+            takeOffCompPawn();
             compulsoryPlayerMove(pawnRow - 2, pawnColumn + 2);
         }
         //opcja comp lewy dolny
@@ -175,6 +221,7 @@ public class DraughtBoard {
             pawnToSquare(pawnRow, pawnColumn);
             pawnToSquare((pawnRow + 1), pawnColumn - 1);
             squareToPlayer(pawnRow + 2, pawnColumn - 2);
+            takeOffCompPawn();
             compulsoryPlayerMove(pawnRow - 2, pawnColumn - 2);
         }
         //opcja comp prawy dolny
@@ -182,6 +229,7 @@ public class DraughtBoard {
             pawnToSquare(pawnRow, pawnColumn);
             pawnToSquare((pawnRow + 1), pawnColumn + 1);
             squareToPlayer(pawnRow + 2, pawnColumn + 2);
+            takeOffCompPawn();
             compulsoryPlayerMove(pawnRow + 2, pawnColumn + 2);
         }
     }
@@ -215,6 +263,14 @@ public class DraughtBoard {
         board[squareRow][squareColumn].setName(BoardText.PLAYER_MARK);
     }
 
+    private void squareToComp(int squareRow, int squareColumn) {
+        board[squareRow][squareColumn].setIsPawn(true);
+        board[squareRow][squareColumn].setIsPlayer(false);
+        board[squareRow][squareColumn].setIsSquare(false);
+        board[squareRow][squareColumn].setIsComp(true);
+        board[squareRow][squareColumn].setName(BoardText.COMP_MARK);
+    }
+
     private void pawnToSquare(int pawnRow, int pawnColumn) {
         board[pawnRow][pawnColumn].setIsSquare(true); //teraz jest polem
         board[pawnRow][pawnColumn].setIsPawn(false); // to nie jest juz pionek
@@ -223,6 +279,37 @@ public class DraughtBoard {
         board[pawnRow][pawnColumn].setName(BoardText.AVAILABLE_SQUARE);//wygląd pola
     }
 
+    public int getNumberOfCompPawns() {
+        return this.numberOfCompPawns;
+    }
+
+    public void takeOffCompPawn() {
+        this.numberOfCompPawns -= 1;
+    }
+
+    public int getNumberOfPlayerPawns() {
+        return this.numberOfPlayerPawns;
+    }
+
+    public void takeOffPlayerPawn() {
+        this.numberOfPlayerPawns -= 1;
+    }
+
+    public DraughtsBoardObject[][] getBoard() {
+        return board;
+    }
+
+    public List<DraughtsBoardObject> getCompPawnsList() {
+        List<DraughtsBoardObject> temp = new ArrayList<>();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board.length; j++) {
+                if (board[i][j].isComp()) {
+                    temp.add(board[i][j]);
+                }
+            }
+        }
+        return temp;
+    }
 
     ///tymczasowe metody do usuniecia---------------------------------------------------------------------
     public void tempRemovePawn(int row, int column) { //zamiana pionka w puste miejsce
@@ -236,5 +323,19 @@ public class DraughtBoard {
 
     public void tempCompPawnAdd(int row, int column) {
         board[row][column] = createCompPawn();
+    }
+
+    public void addIndexesToPawn() {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board.length; j++) {
+                board[i][j].setX(i);
+                board[i][j].setY(j);
+
+            }
+        }
+    }
+    private int getRandomNumber() {
+        Random random = new Random();
+        return random.nextInt(2);
     }
 }

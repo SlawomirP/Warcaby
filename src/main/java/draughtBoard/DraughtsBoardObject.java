@@ -8,6 +8,9 @@ public class DraughtsBoardObject {
     private boolean isPlayer;
     private boolean isComp;
     private boolean isKing;
+    private int x;
+    private int y;
+
 
 
     public DraughtsBoardObject(String name, boolean isAvailable, boolean isPawn, boolean isSquare, boolean isPlayer, boolean isComp) {
@@ -60,8 +63,30 @@ public class DraughtsBoardObject {
         return isAvailable;
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
     @Override
     public String toString() {
         return this.name;
+    }
+
+    // tymczasowe do usuniecia
+
+    public String getInfoPionka(){
+        return this.name + " " + "(" + this.x + ", " + this.y + ")";
     }
 }
