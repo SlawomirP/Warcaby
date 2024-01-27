@@ -15,6 +15,8 @@ public class Game {
     private int playerSquareColumn;
     private int compPawnRow;
     private int compPawnColumn;
+    private boolean wasCompulsoryForComp = false;
+    private boolean wasCompulsoryForPlayer = false;
 
 
     public void start() {
@@ -22,34 +24,64 @@ public class Game {
 
         System.out.println(BoardText.RULES);
 
+//        board.tempRemovePawn(3,4);
+//        board.tempRemovePawn(3,6);
+//        board.tempCompPawnAdd(4,5);
+        board.printBoard();
+
+
         while (board.getNumberOfPlayerPawns() != 0 || board.getNumberOfCompPawns() != 0) {
 
-//            board.printBoard();
-
             //częśc playera
+            System.out.println("--------------- moj ruch");
 
-//            tryToCompulsoryBeat(); // sprawdzam mozliwosc bicia dla playera
-//            System.out.println(BoardText.PLAYER_INSTRUCTION_PAWN);
-//            convertToPawnCords();
-//            System.out.println(BoardText.PLAYER_INSTRUCTION_SQUARE);
-//            convertToSquareCords();
-//            board.playerMove(playerPawnRow, playerPawnColumn,playerSquareRow,playerSquareColumn);
-//            board.printBoard();
+            tryToCompulsoryBeat(); // sprawdzam mozliwosc bicia dla playera
+
+            if(wasCompulsoryForPlayer){
+                board.printBoard();}
+
+            if(!wasCompulsoryForPlayer){
+                System.out.println(BoardText.PLAYER_INSTRUCTION_PAWN);
+                convertToPawnCords();
+                System.out.println(BoardText.PLAYER_INSTRUCTION_SQUARE);
+                convertToSquareCords();
+                board.playerMove(playerPawnRow, playerPawnColumn,playerSquareRow,playerSquareColumn);
+                board.printBoard();
+            }
+
+            wasCompulsoryForPlayer = false;
+
+            System.out.println("---------------komp");
 
             // kod dla ruchu komputera
             board.addIndexesToPawn(); //aktualizacja indexów dla pioknów
             List<DraughtsBoardObject> temp = board.getCompPawnsList(); //lista z pionkami kompa
 
-            do {
-                DraughtsBoardObject tempObjectForCords = getRandomPawn(temp);
-                compPawnRow = tempObjectForCords.getX();
-                compPawnColumn = tempObjectForCords.getY();
-            } while (!board.compMove(compPawnRow, compPawnColumn));
+            for (int i = 0; i < board.getBoard().length; i++) {
+                for (int j = 0; j < board.getBoard().length; j++) {
+                    if (board.getBoard()[i][j].isComp() && board.compulsoryCompMove(i, j)){
+                        wasCompulsoryForComp = true;
+                    }
+                }
+            }
+            if(wasCompulsoryForComp){
+                board.printBoard();}
 
-            board.printBoard();
+//            System.err.println("status wasCompulsory1: " + wasCompulsoryForComp);
+
+            if (!wasCompulsoryForComp) {
+                do {
+                    getCordsRandomCompPawn(temp);
+                } while (!board.compMove(compPawnRow, compPawnColumn));
+                board.printBoard();
+            }
+
+            wasCompulsoryForComp = false;
+//            System.err.println("status wasCompulsory2: " + wasCompulsoryForComp);
 
 
-            convertToPawnCords();// zeby zatrzymac petle
+
+//            convertToPawnCords();// zeby zatrzymac petle
 
 
         }
@@ -57,12 +89,18 @@ public class Game {
 
     }
 
+    private void getCordsRandomCompPawn(List<DraughtsBoardObject> temp) {
+        DraughtsBoardObject tempObjectForCords = getRandomPawn(temp);
+        compPawnRow = tempObjectForCords.getX();
+        compPawnColumn = tempObjectForCords.getY();
+    }
+
 
     private void tryToCompulsoryBeat() { // sprawdzam mozliwosc bicia dla pionkow playera
         for (int i = 0; i < board.getBoard().length; i++) {
             for (int j = 0; j < board.getBoard().length; j++) {
-                if (board.getBoard()[i][j].isPlayer()) {
-                    board.compulsoryPlayerMove(i, j);
+                if (board.getBoard()[i][j].isPlayer() && board.compulsoryPlayerMove(i,j)) {
+                    wasCompulsoryForPlayer = true;
                 }
             }
         }
