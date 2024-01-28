@@ -5,7 +5,7 @@ public class BoardText {
     public static final String PLAYER_MARK ="  O  " ;
     public static final String COMP_MARK ="  X  " ;
     public static final String EMPTY_SQUARE ="     " ;
-    public static final String AVAILABLE_SQUARE ="[   ]" ;
+    public static final String AVAILABLE_SQUARE ="|   |" ;
     public static final String NOT_ALLOWED_OPERATION ="This operation is not allowed";
     public static final String RULES ="Zasady gry w warcaby to:\n" +
             "--- w tej wersji grę rozpczyna gracz - Twoje pionki to -> 0 ---\n" +

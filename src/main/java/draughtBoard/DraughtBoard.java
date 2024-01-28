@@ -207,87 +207,93 @@ public class DraughtBoard {
     }
 
 
-    public boolean compulsoryPlayerMove(int pawnRow, int pawnColumn) { // obowiazkowe zbicie pionka  - idzie z auto dla kazdej strony
+    public boolean compulsoryPlayerMove(int pawnRow, int pawnColumn) { // obowiazkowe zbicie pionka  - idzie z auto
         boolean status = false;
         //opcja comp lewy gorny
-        if (board[pawnRow - 1][pawnColumn - 1].isComp() && board[pawnRow - 2][pawnColumn - 2].isSquare() && board[pawnRow - 2][pawnColumn - 2].isAvailable()) {
-            pawnToSquare(pawnRow, pawnColumn); //pionek playera zamienia sie w pole - dziala
-            pawnToSquare((pawnRow - 1), pawnColumn - 1); //pionek compa zamienia sie w pole - dziala
-            squareToPlayer(pawnRow - 2, pawnColumn - 2); // pole zamiania sie w pionek playera - dziala
-            takeOffCompPawn();
-//            compulsoryPlayerMove(pawnRow - 2, pawnColumn - 2); // na wypadek gdyby bicie bylo podwojne
-            status = true;
+        if (board[pawnRow - 1][pawnColumn - 1].isComp()) {
+            if (board[pawnRow - 2][pawnColumn - 2].isSquare() && board[pawnRow - 2][pawnColumn - 2].isAvailable()) {
+                pawnToSquare(pawnRow, pawnColumn); //pionek playera zamienia sie w pole - dziala
+                pawnToSquare((pawnRow - 1), pawnColumn - 1); //pionek compa zamienia sie w pole - dziala
+                squareToPlayer(pawnRow - 2, pawnColumn - 2); // pole zamiania sie w pionek playera - dziala
+                takeOffCompPawn();
+                status = true;
+            }
         }
         //opcja comp prawy górny
-        else if (board[pawnRow - 1][pawnColumn + 1].isComp() && board[pawnRow - 2][pawnColumn + 2].isSquare() && board[pawnRow - 2][pawnColumn + 2].isAvailable()) {
-            pawnToSquare(pawnRow, pawnColumn);
-            pawnToSquare((pawnRow - 1), pawnColumn + 1);
-            squareToPlayer(pawnRow - 2, pawnColumn + 2);
-            takeOffCompPawn();
-//            compulsoryPlayerMove(pawnRow - 2, pawnColumn + 2);
-            status = true;
+        else if (board[pawnRow - 1][pawnColumn + 1].isComp()) {
+            if (board[pawnRow - 2][pawnColumn + 2].isSquare() && board[pawnRow - 2][pawnColumn + 2].isAvailable()) {
+                pawnToSquare(pawnRow, pawnColumn);
+                pawnToSquare((pawnRow - 1), pawnColumn + 1);
+                squareToPlayer(pawnRow - 2, pawnColumn + 2);
+                takeOffCompPawn();
+                status = true;
+            }
         }
         //opcja comp lewy dolny
-        if (board[pawnRow + 1][pawnColumn - 1].isComp() && board[pawnRow + 2][pawnColumn - 2].isSquare() && board[pawnRow + 2][pawnColumn - 2].isAvailable()) {
-            pawnToSquare(pawnRow, pawnColumn);
-            pawnToSquare((pawnRow + 1), pawnColumn - 1);
-            squareToPlayer(pawnRow + 2, pawnColumn - 2);
-            takeOffCompPawn();
-//            compulsoryPlayerMove(pawnRow - 2, pawnColumn - 2);
-            status = true;
+        if (board[pawnRow + 1][pawnColumn - 1].isComp()) {
+            if (board[pawnRow + 2][pawnColumn - 2].isSquare() && board[pawnRow + 2][pawnColumn - 2].isAvailable()) {
+                pawnToSquare(pawnRow, pawnColumn);
+                pawnToSquare((pawnRow + 1), pawnColumn - 1);
+                squareToPlayer(pawnRow + 2, pawnColumn - 2);
+                takeOffCompPawn();
+                status = true;
+            }
         }
         //opcja comp prawy dolny
-        else if (board[pawnRow + 1][pawnColumn + 1].isComp() && board[pawnRow + 2][pawnColumn + 2].isSquare() && board[pawnRow + 2][pawnColumn + 2].isAvailable()) {
-            pawnToSquare(pawnRow, pawnColumn);
-            pawnToSquare((pawnRow + 1), pawnColumn + 1);
-            squareToPlayer(pawnRow + 2, pawnColumn + 2);
-            takeOffCompPawn();
-//            compulsoryPlayerMove(pawnRow + 2, pawnColumn + 2);
-            status = true;
+        else if (board[pawnRow + 1][pawnColumn + 1].isComp()) {
+            if (board[pawnRow + 2][pawnColumn + 2].isSquare() && board[pawnRow + 2][pawnColumn + 2].isAvailable()) {
+                pawnToSquare(pawnRow, pawnColumn);
+                pawnToSquare((pawnRow + 1), pawnColumn + 1);
+                squareToPlayer(pawnRow + 2, pawnColumn + 2);
+                takeOffCompPawn();
+                status = true;
+            }
         }
         return status;
     }
 
     public boolean compulsoryCompMove(int pawnRow, int pawnColumn) {
         boolean status = false;
-
         //player w lewym górnym
-        if (board[pawnRow - 1][pawnColumn - 1].isPlayer() && board[pawnRow - 2][pawnColumn - 2].isSquare() && board[pawnRow - 2][pawnColumn - 2].isAvailable()) {
-            status = true;
-            pawnToSquare(pawnRow, pawnColumn); //pionek compa zamienia sie w pole
-            pawnToSquare((pawnRow - 1), pawnColumn - 1); //pionek playera zamienia sie w pole
-            squareToComp(pawnRow - 2, pawnColumn - 2); // pole zamiania sie w pionek compa
-            takeOffPlayerPawn();
-            compulsoryCompMove(pawnRow - 2, pawnColumn - 2); // na wypadek gdyby bicie bylo podwojne
+        if (board[pawnRow - 1][pawnColumn - 1].isPlayer()) {
+            if (board[pawnRow - 2][pawnColumn - 2].isSquare() && board[pawnRow - 2][pawnColumn - 2].isAvailable()) {
+                status = true;
+                pawnToSquare(pawnRow, pawnColumn); //pionek compa zamienia sie w pole
+                pawnToSquare((pawnRow - 1), pawnColumn - 1); //pionek playera zamienia sie w pole
+                squareToComp(pawnRow - 2, pawnColumn - 2); // pole zamiania sie w pionek compa
+                takeOffPlayerPawn();
+            }
         }
         //player w prawym gornym
-        else if (board[pawnRow - 1][pawnColumn + 1].isPlayer() && board[pawnRow - 2][pawnColumn + 2].isSquare() && board[pawnRow - 2][pawnColumn + 2].isAvailable()) {
-            status = true;
-            pawnToSquare(pawnRow, pawnColumn);
-            pawnToSquare((pawnRow - 1), pawnColumn + 1);
-            squareToComp(pawnRow - 2, pawnColumn + 2);
-            takeOffPlayerPawn();
-            compulsoryCompMove(pawnRow - 2, pawnColumn + 2);
+        else if (board[pawnRow - 1][pawnColumn + 1].isPlayer()) {
+            if (board[pawnRow - 2][pawnColumn + 2].isSquare() && board[pawnRow - 2][pawnColumn + 2].isAvailable()) {
+                status = true;
+                pawnToSquare(pawnRow, pawnColumn);
+                pawnToSquare((pawnRow - 1), pawnColumn + 1);
+                squareToComp(pawnRow - 2, pawnColumn + 2);
+                takeOffPlayerPawn();
+            }
         }
         // player w lewym dolnym
-        else if (board[pawnRow + 1][pawnColumn - 1].isPlayer() && board[pawnRow + 2][pawnColumn - 2].isSquare() && board[pawnRow + 2][pawnColumn - 2].isAvailable()) {
-            status = true;
-            pawnToSquare(pawnRow, pawnColumn);
-            pawnToSquare((pawnRow + 1), pawnColumn - 1);
-            squareToComp(pawnRow + 2, pawnColumn - 2);
-            takeOffPlayerPawn();
-            compulsoryCompMove(pawnRow + 2, pawnColumn - 2);
+        else if (board[pawnRow + 1][pawnColumn - 1].isPlayer()) {
+            if (board[pawnRow + 2][pawnColumn - 2].isSquare() && board[pawnRow + 2][pawnColumn - 2].isAvailable()) {
+                status = true;
+                pawnToSquare(pawnRow, pawnColumn);
+                pawnToSquare((pawnRow + 1), pawnColumn - 1);
+                squareToComp(pawnRow + 2, pawnColumn - 2);
+                takeOffPlayerPawn();
+            }
         }
         //player w prawym dolnym
-        else if (board[pawnRow + 1][pawnColumn + 1].isPlayer() && board[pawnRow + 2][pawnColumn + 2].isSquare() && board[pawnRow + 2][pawnColumn + 2].isAvailable()) {
-            status = true;
-            pawnToSquare(pawnRow, pawnColumn);
-            pawnToSquare((pawnRow + 1), pawnColumn + 1);
-            squareToComp(pawnRow + 2, pawnColumn + 2);
-            takeOffPlayerPawn();
-            compulsoryCompMove(pawnRow + 2, pawnColumn + 2);
+        else if (board[pawnRow + 1][pawnColumn + 1].isPlayer()) {
+            if (board[pawnRow + 2][pawnColumn + 2].isSquare() && board[pawnRow + 2][pawnColumn + 2].isAvailable()) {
+                status = true;
+                pawnToSquare(pawnRow, pawnColumn);
+                pawnToSquare((pawnRow + 1), pawnColumn + 1);
+                squareToComp(pawnRow + 2, pawnColumn + 2);
+                takeOffPlayerPawn();
+            }
         }
-
         return status;
     }
 
@@ -397,7 +403,8 @@ public class DraughtBoard {
     public void tempCompPawnAdd(int row, int column) {
         board[row][column] = createCompPawn();
     }
-    public void setCompPawnAmount(int nr){
+
+    public void setCompPawnAmount(int nr) {
         this.numberOfCompPawns = nr;
     }
 }

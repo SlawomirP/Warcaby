@@ -21,34 +21,18 @@ public class Game {
 
     public void start() {
 
-
         System.out.println(BoardText.RULES);
 
-        board.tempRemovePawn(1,2);
-        board.tempRemovePawn(1,4);
-        board.tempRemovePawn(1,6);
-        board.tempRemovePawn(1,8);
-        board.tempRemovePawn(2,1);
-        board.tempRemovePawn(2,3);
-        board.tempRemovePawn(2,5);
-        board.tempRemovePawn(2,7);
-        board.tempRemovePawn(3,2);
-        board.tempRemovePawn(3,6);
-        board.tempRemovePawn(3,8);
-
-        board.setCompPawnAmount(1);
-
         board.printBoard();
-
 
         while (board.getNumberOfPlayerPawns() != 0 && board.getNumberOfCompPawns() != 0) {
 
             //częśc playera
             System.out.println("--------------- moj ruch");
-
-            if(board.getNumberOfCompPawns() != 0){
-                tryToCompulsoryBeat(); // sprawdzam mozliwosc bicia dla playera
-
+            if (board.getNumberOfCompPawns() != 0) {
+                for (int i = 0; i < 4; i++) {
+                    tryToCompulsoryBeat(); // sprawdzam mozliwosc bicia dla playera
+                }
                 if (wasCompulsoryForPlayer) {// jezeli bylo bicie to wyswietl plansze
                     board.printBoard();
                 }
@@ -64,16 +48,17 @@ public class Game {
                 wasCompulsoryForPlayer = false;// reset stanu
             }
 
-
-
             System.out.println("---------------komp");
-
             // kod dla ruchu komputera
-            if(board.getNumberOfCompPawns() != 0){
+            if (board.getNumberOfCompPawns() != 0) {
+                for (int i = 0; i < 4; i++) {
+                    board.addIndexesToPawn(); //aktualizacja indexów dla pioknów
+                    List<DraughtsBoardObject> temp = board.getCompPawnsList(); //lista z pionkami kompa
+                    compCompulsoryBeat(); // komp sprawdza czy jest musowe bicie
+                }
                 board.addIndexesToPawn(); //aktualizacja indexów dla pioknów
                 List<DraughtsBoardObject> temp = board.getCompPawnsList(); //lista z pionkami kompa
 
-                compCompulsoryBeat(); // komp sprawdza czy jest musowe bicie
                 if (wasCompulsoryForComp) { // jezeli jest to wyswietl  tablice
                     board.printBoard();
                 }
@@ -86,14 +71,10 @@ public class Game {
                 }
                 wasCompulsoryForComp = false;
             }
-
-
             System.out.println("wynik player: " + board.getNumberOfPlayerPawns());
             System.out.println("wynik komp: " + board.getNumberOfCompPawns());
         }
-
         System.out.println("bye bye");
-
     }
 
     private void compCompulsoryBeat() {
@@ -116,12 +97,10 @@ public class Game {
 
 
     private void tryToCompulsoryBeat() {
-        if (board.getBoard().length != 0) {
-            for (int i = 0; i < board.getBoard().length; i++) {
-                for (int j = 0; j < board.getBoard().length; j++) {
-                    if (board.getBoard()[i][j].isPlayer() && board.compulsoryPlayerMove(i, j)) {
-                        wasCompulsoryForPlayer = true;
-                    }
+        for (int i = 0; i < board.getBoard().length; i++) {
+            for (int j = 0; j < board.getBoard().length; j++) {
+                if (board.getBoard()[i][j].isPlayer() && board.compulsoryPlayerMove(i, j)) {
+                    wasCompulsoryForPlayer = true;
                 }
             }
         }
@@ -142,7 +121,7 @@ public class Game {
     private int getRandomNumber(List<DraughtsBoardObject> list) {
         int temp = 0;
         Random random = new Random();
-        if (list.size() != 0) {
+        if (!list.isEmpty()) {
             temp = random.nextInt(list.size());
         }
         return temp;
@@ -151,5 +130,4 @@ public class Game {
     private DraughtsBoardObject getRandomPawn(List<DraughtsBoardObject> list) {
         return list.get(getRandomNumber(list));
     }
-
 }
