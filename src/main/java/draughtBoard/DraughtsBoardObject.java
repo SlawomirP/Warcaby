@@ -8,10 +8,9 @@ public class DraughtsBoardObject {
     private boolean isPlayer;
     private boolean isComp;
     private boolean isKing;
+
     private int x;
     private int y;
-
-
 
     public DraughtsBoardObject(String name, boolean isAvailable, boolean isPawn, boolean isSquare, boolean isPlayer, boolean isComp) {
         this.name = name;
@@ -82,6 +81,14 @@ public class DraughtsBoardObject {
     @Override
     public String toString() {
         return this.name;
+    }
+
+    public boolean isKing() {
+        return isKing;
+    }
+
+    public void setKing(boolean king) {
+        isKing = king;
     }
 
     // tymczasowe do usuniecia

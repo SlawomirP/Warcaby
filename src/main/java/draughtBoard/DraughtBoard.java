@@ -151,10 +151,14 @@ public class DraughtBoard {
         }
     }
 
-    public void playerMove(int pawnRow, int pawnColumn, int squareRow, int squareColumn) { // ruch przy pustym nastepnym polu - zamiana pionka w pole i pola w pionek
-        if (board[pawnRow][pawnColumn].isPlayer() && board[squareRow][squareColumn].isSquare() && board[squareRow][squareColumn].isAvailable() && (squareRow == pawnRow - 1) && ((squareColumn == (pawnColumn - 1)) || ((squareColumn == (pawnColumn + 1))))) {
+    public void playerMove(int pawnRow, int pawnColumn, int squareRow, int squareColumn) { // ruch przy pustym nastepnym polu - zamiana pionka w pole i pola w pionek/ ew damke
+        if (board[pawnRow][pawnColumn].isPlayer() && !board[pawnRow][pawnColumn].isKing() && board[squareRow][squareColumn].isSquare() && board[squareRow][squareColumn].isAvailable() && (squareRow == pawnRow - 1) && ((squareColumn == (pawnColumn - 1)) || ((squareColumn == (pawnColumn + 1))))) {
             pawnToSquare(pawnRow, pawnColumn);//pionek zamienia sie w pole
             squareToPlayer(squareRow, squareColumn); //pole - pole staje sie pionkiem i ma wyglad gracza
+            // jezeli wystapi przypadek ze pole jest damkowe to zmieni pionka w damke
+            if((squareRow ==1 && squareColumn == 2) || (squareRow ==1 && squareColumn == 4) ||(squareRow ==1 && squareColumn == 6) || (squareRow ==1 && squareColumn == 8)){
+                squareToPlayerKing(squareRow, squareColumn);
+            }
         } else {
             System.err.println(BoardText.NOT_ALLOWED_OPERATION);
         }
@@ -325,6 +329,11 @@ public class DraughtBoard {
         board[squareRow][squareColumn].setIsComp(false);
         board[squareRow][squareColumn].setName(BoardText.PLAYER_MARK);
     }
+    private void squareToPlayerKing(int squareRow, int squareColumn){
+        squareToPlayer(squareRow,squareColumn);
+        board[squareRow][squareColumn].setKing(true);
+        board[squareRow][squareColumn].setName(BoardText.PLAYER_KING_MARK);
+    }
 
     private void squareToComp(int squareRow, int squareColumn) {
         board[squareRow][squareColumn].setIsPawn(true);
@@ -332,6 +341,11 @@ public class DraughtBoard {
         board[squareRow][squareColumn].setIsSquare(false);
         board[squareRow][squareColumn].setIsComp(true);
         board[squareRow][squareColumn].setName(BoardText.COMP_MARK);
+    }
+    private void squareToCompKing(int squareRow, int squareColumn){
+        squareToComp(squareRow,squareColumn);
+        board[squareRow][squareColumn].setKing(true);
+        board[squareRow][squareColumn].setName(BoardText.COMP_KING_MARK);
     }
 
     private void pawnToSquare(int pawnRow, int pawnColumn) {
