@@ -152,6 +152,7 @@ public class DraughtBoard {
     }
 
     public void playerMove(int pawnRow, int pawnColumn, int squareRow, int squareColumn) { // ruch przy pustym nastepnym polu - zamiana pionka w pole i pola w pionek/ ew damke
+        // ruch dla zwyklego pionka
         if (board[pawnRow][pawnColumn].isPlayer() && !board[pawnRow][pawnColumn].isKing() && board[squareRow][squareColumn].isSquare() && board[squareRow][squareColumn].isAvailable() && (squareRow == pawnRow - 1) && ((squareColumn == (pawnColumn - 1)) || ((squareColumn == (pawnColumn + 1))))) {
             pawnToSquare(pawnRow, pawnColumn);//pionek zamienia sie w pole
             squareToPlayer(squareRow, squareColumn); //pole - pole staje sie pionkiem i ma wyglad gracza
@@ -159,12 +160,15 @@ public class DraughtBoard {
             if((squareRow ==1 && squareColumn == 2) || (squareRow ==1 && squareColumn == 4) ||(squareRow ==1 && squareColumn == 6) || (squareRow ==1 && squareColumn == 8)){
                 squareToPlayerKing(squareRow, squareColumn);
             }
-        } else {
+        } else if (board[pawnRow][pawnColumn].isPlayer() && board[pawnRow][pawnColumn].isKing()){
+            // kod do obsługi ruchów damki - trzeba jeszcze dodac warunki
+        }
+        else {
             System.err.println(BoardText.NOT_ALLOWED_OPERATION);
         }
     }
 
-    public boolean compMove(int pawnRow, int pawnColumn) {
+    public boolean compMove(int pawnRow, int pawnColumn) { // metoda zwraca true lub false - od tego zalezy czy sprawdzany bedzie kolejny pionek czy nie - petla bedzie wykonywana do czasu uzyskania gdzies true
         boolean status = false;
         // jezeli po lewej byloby zbicie odbij w prawo jezeli jest mozliwosc
         if (board[pawnRow + 1][pawnColumn - 1].isSquare() && board[pawnRow + 1][pawnColumn - 1].isAvailable() && board[pawnRow + 2][pawnColumn - 2].isPlayer() && board[pawnRow + 1][pawnColumn + 1].isSquare() && board[pawnRow + 1][pawnColumn + 1].isAvailable()) {

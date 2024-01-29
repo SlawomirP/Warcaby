@@ -59,7 +59,7 @@ public class Game {
                 board.addIndexesToPawn(); //aktualizacja indexów dla pioknów
                 List<DraughtsBoardObject> temp = board.getCompPawnsList(); //lista z pionkami kompa
 
-                if (wasCompulsoryForComp) { // jezeli jest to wyswietl  tablice
+                if (wasCompulsoryForComp) { // jezeli jest musowe bicie to wyswietl  tablice
                     board.printBoard();
                 }
 
@@ -89,14 +89,14 @@ public class Game {
         }
     }
 
-    private void getCordsRandomCompPawn(List<DraughtsBoardObject> temp) {
+    private void getCordsRandomCompPawn(List<DraughtsBoardObject> temp) { // pobiera cordy z losowego pionka kompa
         DraughtsBoardObject tempObjectForCords = getRandomPawn(temp);
         compPawnRow = tempObjectForCords.getX();
         compPawnColumn = tempObjectForCords.getY();
     }
 
 
-    private void tryToCompulsoryBeat() {
+    private void tryToCompulsoryBeat() { // sprawdzam czy gdzies wystapi musowe bicie dla playera
         for (int i = 0; i < board.getBoard().length; i++) {
             for (int j = 0; j < board.getBoard().length; j++) {
                 if (board.getBoard()[i][j].isPlayer() && board.compulsoryPlayerMove(i, j)) {
@@ -106,7 +106,7 @@ public class Game {
         }
     }
 
-    private void convertToSquareCords() {
+    private void convertToSquareCords() { // zamiana danych od playera na cordy - square ta dolna metode usunac bo sie powtarza kod
         String[] cords = scan.nextLine().split(",");
         playerSquareRow = Integer.parseInt(cords[0]);
         playerSquareColumn = Integer.parseInt(cords[1]);
@@ -118,8 +118,8 @@ public class Game {
         playerPawnColumn = Integer.parseInt(cords[1]);
     }
 
-    private int getRandomNumber(List<DraughtsBoardObject> list) {
-        int temp = 0;
+    private int getRandomNumber(List<DraughtsBoardObject> list) { // uzyskujemy randomowa pozycje pionka
+        int temp = 0;                                             // losowanie od 0 do wielkosci listy
         Random random = new Random();
         if (!list.isEmpty()) {
             temp = random.nextInt(list.size());
@@ -127,7 +127,7 @@ public class Game {
         return temp;
     }
 
-    private DraughtsBoardObject getRandomPawn(List<DraughtsBoardObject> list) {
+    private DraughtsBoardObject getRandomPawn(List<DraughtsBoardObject> list) { // losowy pionek z listy
         return list.get(getRandomNumber(list));
     }
 }
