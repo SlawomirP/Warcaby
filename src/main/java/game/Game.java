@@ -25,27 +25,27 @@ public class Game {
 
         board.printBoard();
 
-        while (board.getNumberOfPlayerPawns() != 0 && board.getNumberOfCompPawns() != 0) {
+        while (board.getNumberOfPlayerPawns() != 0 && board.getNumberOfCompPawns() != 0) { // pętla trwa tak dlugo jak pi
 
             //częśc playera
             System.out.println("--------------- moj ruch");
-            if (board.getNumberOfCompPawns() != 0) {
+            if (board.getNumberOfCompPawns() != 0) { // w sumie niepotrzebny warunek, do usuniecia
                 for (int i = 0; i < 4; i++) {
-                    tryToCompulsoryBeat(); // sprawdzam mozliwosc bicia dla playera
+                    tryToCompulsoryBeat(); // sprawdzam mozliwosc bicia dla playera na wszelki wypadek 4 razy bo jak bedzie bicie to moze jest kolejne
                 }
-                if (wasCompulsoryForPlayer) {// jezeli bylo bicie to wyswietl plansze
+                if (wasCompulsoryForPlayer) {// jezeli bylo bicie to wyswietl plansze - zastepuje ta pierwsza
                     board.printBoard();
                 }
 
-                if (!wasCompulsoryForPlayer) { // jezeli nie bylo auto bicia to kolejka gracza
+                if (!wasCompulsoryForPlayer) { // jezeli nie bylo auto bicia to kolejka gracza / w przypadku musowego bicia - player nie wykonuje ruchu
                     System.out.println(BoardText.PLAYER_INSTRUCTION_PAWN);
                     convertToPawnCords();
                     System.out.println(BoardText.PLAYER_INSTRUCTION_SQUARE);
                     convertToSquareCords();
-                    board.playerMove(playerPawnRow, playerPawnColumn, playerSquareRow, playerSquareColumn);
-                    board.printBoard();
+                    board.playerMove(playerPawnRow, playerPawnColumn, playerSquareRow, playerSquareColumn); // trzeba dorobic poprawke bo player traci swoj ruch kompletnie
+                    board.printBoard();                                                                     //jeze wyjdzie niedozwolony ruch
                 }
-                wasCompulsoryForPlayer = false;// reset stanu
+                wasCompulsoryForPlayer = false;// reset stanu,
             }
 
             System.out.println("---------------komp");
