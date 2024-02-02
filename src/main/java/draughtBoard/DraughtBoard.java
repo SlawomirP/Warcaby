@@ -212,6 +212,39 @@ public class DraughtBoard {
         }
         return status;
     }
+    public void compulsoryPlayerKingMove(){}
+    private int [] returnFirsCompPawnCordsLeftUp(int pawnRow, int pawnColumn){
+        int [] temp = new int[2];
+
+        for (int i = 0; i < 7; i++) {
+            pawnRow--;
+            pawnColumn--;
+            if(!board[pawnRow][pawnColumn].isAvailable()){
+                break;
+            }
+            if(board[pawnRow][pawnColumn].isComp()){
+                temp[0] = pawnRow;
+                temp[1] = pawnColumn;
+                break;
+            }
+        }
+        return temp;
+    }
+    private boolean checkCompPawnAvailibilityLeftUp(int pawnRow, int pawnColumn){ // sprawdzam czy jest komp na drodze damki
+        boolean result = false;
+        for (int i = 0; i < 7; i++) {
+            pawnRow--;
+            pawnColumn--;
+            if(!board[pawnRow][pawnColumn].isAvailable()){ // w przypadku dojscia do ramki break
+                break;
+            }
+            if(board[pawnRow][pawnColumn].isComp()){
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
 
     public boolean compMove(int pawnRow, int pawnColumn) { // metoda zwraca true lub false - od tego zalezy czy sprawdzany bedzie kolejny pionek czy nie - petla bedzie wykonywana do czasu uzyskania gdzies true
         boolean status = false;
