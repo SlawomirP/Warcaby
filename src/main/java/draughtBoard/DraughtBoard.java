@@ -8,8 +8,6 @@ import java.util.Random;
 
 public class DraughtBoard {
     public static final int SIZE = 10;
-    private int numberOfCompPawns = 12;
-    private int numberOfPlayerPawns = 12;
     private DraughtsBoardObject[][] board = new DraughtsBoardObject[SIZE][SIZE];
 
     public DraughtBoard() {
@@ -176,7 +174,6 @@ public class DraughtBoard {
                 pawnToSquare(pawnRow, pawnColumn); //pionek playera zamienia sie w pole - dziala
                 pawnToSquare((pawnRow - 1), pawnColumn - 1); //pionek compa zamienia sie w pole - dziala
                 squareToPlayer(pawnRow - 2, pawnColumn - 2); // pole zamiania sie w pionek playera - dziala
-                takeOffCompPawn();
                 status = true;
             }
         }
@@ -186,7 +183,6 @@ public class DraughtBoard {
                 pawnToSquare(pawnRow, pawnColumn);
                 pawnToSquare((pawnRow - 1), pawnColumn + 1);
                 squareToPlayer(pawnRow - 2, pawnColumn + 2);
-                takeOffCompPawn();
                 status = true;
             }
         }
@@ -196,7 +192,6 @@ public class DraughtBoard {
                 pawnToSquare(pawnRow, pawnColumn);
                 pawnToSquare((pawnRow + 1), pawnColumn - 1);
                 squareToPlayer(pawnRow + 2, pawnColumn - 2);
-                takeOffCompPawn();
                 status = true;
             }
         }
@@ -206,7 +201,6 @@ public class DraughtBoard {
                 pawnToSquare(pawnRow, pawnColumn);
                 pawnToSquare((pawnRow + 1), pawnColumn + 1);
                 squareToPlayer(pawnRow + 2, pawnColumn + 2);
-                takeOffCompPawn();
                 status = true;
             }
         }
@@ -224,7 +218,7 @@ public class DraughtBoard {
             result = changesInCaseKingBeat(pawnRow, pawnColumn, tempRowS, tempColumnS, tempRow, tempColumn, result);
         }
         //leftDown
-        else if(checkCompPawnAvailibilityLeftDown(pawnRow, pawnColumn) && board[pawnRow][pawnColumn].isKing()){
+        else if (checkCompPawnAvailibilityLeftDown(pawnRow, pawnColumn) && board[pawnRow][pawnColumn].isKing()) {
             int tempRow = returnFirsCompPawnCordsLeftDown(pawnRow, pawnColumn)[0];
             int tempColumn = returnFirsCompPawnCordsLeftDown(pawnRow, pawnColumn)[1];
             int tempRowS = tempRow + 1;
@@ -232,7 +226,7 @@ public class DraughtBoard {
             result = changesInCaseKingBeat(pawnRow, pawnColumn, tempRowS, tempColumnS, tempRow, tempColumn, result);
         }
         //rihtUp
-        else if(checkCompPawnAvailibilityRightUp(pawnRow, pawnColumn) && board[pawnRow][pawnColumn].isKing()){
+        else if (checkCompPawnAvailibilityRightUp(pawnRow, pawnColumn) && board[pawnRow][pawnColumn].isKing()) {
             int tempRow = returnFirsCompPawnCordsRightUp(pawnRow, pawnColumn)[0];
             int tempColumn = returnFirsCompPawnCordsRightUp(pawnRow, pawnColumn)[1];
             int tempRowS = tempRow - 1;
@@ -240,7 +234,7 @@ public class DraughtBoard {
             result = changesInCaseKingBeat(pawnRow, pawnColumn, tempRowS, tempColumnS, tempRow, tempColumn, result);
         }
         //rightDown
-        else if(checkCompPawnAvailibilityRightDown(pawnRow, pawnColumn) && board[pawnRow][pawnColumn].isKing()){
+        else if (checkCompPawnAvailibilityRightDown(pawnRow, pawnColumn) && board[pawnRow][pawnColumn].isKing()) {
             int tempRow = returnFirsCompPawnCordsRightDown(pawnRow, pawnColumn)[0];
             int tempColumn = returnFirsCompPawnCordsRightDown(pawnRow, pawnColumn)[1];
             int tempRowS = tempRow + 1;
@@ -276,6 +270,7 @@ public class DraughtBoard {
         }
         return temp;
     }
+
     private int[] returnFirsCompPawnCordsLeftDown(int pawnRow, int pawnColumn) {
         int[] temp = new int[2];
         for (int i = 0; i < 7; i++) {
@@ -292,6 +287,7 @@ public class DraughtBoard {
         }
         return temp;
     }
+
     private int[] returnFirsCompPawnCordsRightUp(int pawnRow, int pawnColumn) {
         int[] temp = new int[2];
         for (int i = 0; i < 7; i++) {
@@ -308,6 +304,7 @@ public class DraughtBoard {
         }
         return temp;
     }
+
     private int[] returnFirsCompPawnCordsRightDown(int pawnRow, int pawnColumn) {
         int[] temp = new int[2];
         for (int i = 0; i < 7; i++) {
@@ -340,6 +337,7 @@ public class DraughtBoard {
         }
         return result;
     }
+
     private boolean checkCompPawnAvailibilityLeftDown(int pawnRow, int pawnColumn) { // sprawdzam czy jest komp na drodze damki
         boolean result = false;
         for (int i = 0; i < 7; i++) {
@@ -355,6 +353,7 @@ public class DraughtBoard {
         }
         return result;
     }
+
     private boolean checkCompPawnAvailibilityRightUp(int pawnRow, int pawnColumn) { // sprawdzam czy jest komp na drodze damki
         boolean result = false;
         for (int i = 0; i < 7; i++) {
@@ -370,6 +369,7 @@ public class DraughtBoard {
         }
         return result;
     }
+
     private boolean checkCompPawnAvailibilityRightDown(int pawnRow, int pawnColumn) { // sprawdzam czy jest komp na drodze damki
         boolean result = false;
         for (int i = 0; i < 7; i++) {
@@ -432,7 +432,6 @@ public class DraughtBoard {
         return status;
     }
 
-
     public boolean compulsoryCompMove(int pawnRow, int pawnColumn) {
         boolean status = false;
         //player w lewym górnym
@@ -442,7 +441,6 @@ public class DraughtBoard {
                 pawnToSquare(pawnRow, pawnColumn); //pionek compa zamienia sie w pole
                 pawnToSquare((pawnRow - 1), pawnColumn - 1); //pionek playera zamienia sie w pole
                 squareToComp(pawnRow - 2, pawnColumn - 2); // pole zamiania sie w pionek compa
-                takeOffPlayerPawn();
             }
         }
         //player w prawym gornym
@@ -452,7 +450,6 @@ public class DraughtBoard {
                 pawnToSquare(pawnRow, pawnColumn);
                 pawnToSquare((pawnRow - 1), pawnColumn + 1);
                 squareToComp(pawnRow - 2, pawnColumn + 2);
-                takeOffPlayerPawn();
             }
         }
         // player w lewym dolnym
@@ -462,7 +459,6 @@ public class DraughtBoard {
                 pawnToSquare(pawnRow, pawnColumn);
                 pawnToSquare((pawnRow + 1), pawnColumn - 1);
                 squareToComp(pawnRow + 2, pawnColumn - 2);
-                takeOffPlayerPawn();
             }
         }
         //player w prawym dolnym
@@ -472,7 +468,6 @@ public class DraughtBoard {
                 pawnToSquare(pawnRow, pawnColumn);
                 pawnToSquare((pawnRow + 1), pawnColumn + 1);
                 squareToComp(pawnRow + 2, pawnColumn + 2);
-                takeOffPlayerPawn();
             }
         }
         return status;
@@ -541,22 +536,6 @@ public class DraughtBoard {
         board[squareRow][squareColumn].setName(BoardText.COMP_KING_MARK);
     }
 
-    public int getNumberOfCompPawns() {
-        return this.numberOfCompPawns;
-    }
-
-    public void takeOffCompPawn() {
-        this.numberOfCompPawns -= 1;
-    }
-
-    public int getNumberOfPlayerPawns() {
-        return this.numberOfPlayerPawns;
-    }
-
-    public void takeOffPlayerPawn() {
-        this.numberOfPlayerPawns -= 1;
-    }
-
     public DraughtsBoardObject[][] getBoard() {
         return board;
     }
@@ -593,7 +572,6 @@ public class DraughtBoard {
     }
 
     ///tymczasowe metody do usuniecia---------------------------------------------------------------------
-
     public void tempRemovePawn(int row, int column) { //zamiana pionka w puste miejsce
         board[row][column].setIsPawn(false);
         board[row][column].setIsSquare(true);
@@ -606,7 +584,4 @@ public class DraughtBoard {
         board[row][column] = createCompPawn();
     }
 
-    public void setCompPawnAmount(int nr) {
-        this.numberOfCompPawns = nr;
-    }
 }

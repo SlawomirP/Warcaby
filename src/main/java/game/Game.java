@@ -18,42 +18,21 @@ public class Game {
     private boolean wasCompulsoryForComp = false;
     private boolean wasCompulsoryForPlayer = false;
 
-
     public void start() {
-
         System.out.println(BoardText.RULES);
-
-        // tymczasowe wywalenie pionkow kompa
-        board.tempRemovePawn(1,2);
-        board.tempRemovePawn(1,4);
-        board.tempRemovePawn(1,6);
-        board.tempRemovePawn(1,8);
-        board.tempRemovePawn(2,1);
-        board.tempRemovePawn(2,3);
-        board.tempRemovePawn(2,5);
-        board.tempRemovePawn(2,7);
-        board.tempRemovePawn(3,2);
-        board.tempRemovePawn(3,4);
-        board.tempRemovePawn(3,6);
-        board.tempRemovePawn(3,8);
-        board.tempCompPawnAdd(3,4);
-        board.tempCompPawnAdd(3,2);
 
         board.printBoard();
 
-        while (board.getNumberOfPlayerPawns() != 0 && board.getNumberOfCompPawns() != 0) { // pętla trwa tak dlugo jak są pionki w grze
-
+        while (getPlayerPawns() != 0 && getCompPawns() != 0) { // pętla trwa tak dlugo jak są pionki w grze
             //częśc playera
-            System.out.println("--------------- moj ruch");
-
-            if (board.getNumberOfCompPawns() != 0) { // w sumie niepotrzebny warunek, do usuniecia
+            System.out.println(BoardText.PLAYER_TURN);
+            if (getCompPawns() != 0) {
                 for (int i = 0; i < 4; i++) {
                     tryToCompulsoryBeat(); // sprawdzam mozliwosc bicia dla playera na wszelki wypadek 4 razy bo jak bedzie bicie to moze jest kolejne
                 }
                 if (wasCompulsoryForPlayer) {// jezeli bylo bicie to wyswietl plansze - zastepuje ta pierwsza
                     board.printBoard();
                 }
-
                 if (!wasCompulsoryForPlayer) { // jezeli nie bylo auto bicia to kolejka gracza / w przypadku musowego bicia - player nie wykonuje ruchu
                     System.out.println(BoardText.PLAYER_INSTRUCTION_PAWN); // bo wasCompulsory jest ustawione na true po met try compulsoryBeat
                     convertToPawnCords();
@@ -65,42 +44,65 @@ public class Game {
                 wasCompulsoryForPlayer = false;// reset stanu, dla next pętli
             }
 
+            System.out.println(BoardText.COMP_TURN);
+            // kod dla ruchu komputera
+            if (getCompPawns() != 0) { // sprawdzam czy zostaly jeszcze jakies pionki kompa
+                for (int i = 0; i < 4; i++) {
+                    board.addIndexesToPawn(); //aktualizacja indexów dla pioknów
+                    List<DraughtsBoardObject> temp = board.getCompPawnsList(); //lista z pionkami kompa
+                    compCompulsoryBeat(); // komp sprawdza czy jest musowe bicie
+                }
+                board.addIndexesToPawn(); //aktualizacja indexów dla pioknów
 
+                List<DraughtsBoardObject> temp = board.getCompPawnsList(); //lista z pionkami kompa
 
-
-
-//            System.out.println("---------------komp");
-//            // kod dla ruchu komputera
-//            if (board.getNumberOfCompPawns() != 0) { // sprawdzam czy zostaly jeszcze jakies pionki kompa
-//                for (int i = 0; i < 4; i++) {
-//                    board.addIndexesToPawn(); //aktualizacja indexów dla pioknów
-//                    List<DraughtsBoardObject> temp = board.getCompPawnsList(); //lista z pionkami kompa
-//                    compCompulsoryBeat(); // komp sprawdza czy jest musowe bicie
-//                }
-//                board.addIndexesToPawn(); //aktualizacja indexów dla pioknów
-//                List<DraughtsBoardObject> temp = board.getCompPawnsList(); //lista z pionkami kompa
-//
-//                if (wasCompulsoryForComp) { // jezeli jest musowe bicie to wyswietl  tablice
-//                    board.printBoard();
-//                }
-//
-//                if (!wasCompulsoryForComp) { // w przypadku braku musowego bicia nastepuje normalny ruch
-//                    do {
-//                        getCordsRandomCompPawn(temp); // pobrany random pionek
-//                    } while (!board.compMove(compPawnRow, compPawnColumn)); // powtarza sprawdzanie dostepnosci ruchu do momenty uzyskania true z metody
-//                    board.printBoard();
-//                }
-//                wasCompulsoryForComp = false; // trzeba zresetowac stan
-//            }
-
-
-
-
-
-            System.out.println("wynik player: " + board.getNumberOfPlayerPawns());
-            System.out.println("wynik komp: " + board.getNumberOfCompPawns());
+                if (wasCompulsoryForComp) { // jezeli jest musowe bicie to wyswietl  tablice
+                    board.printBoard();
+                }
+                if (!wasCompulsoryForComp) { // w przypadku braku musowego bicia nastepuje normalny ruch
+                    do {
+                        getCordsRandomCompPawn(temp); // pobrany random pionek
+                    } while (!board.compMove(compPawnRow, compPawnColumn)); // powtarza sprawdzanie dostepnosci ruchu do momenty uzyskania true z metody
+                    board.printBoard();
+                }
+                wasCompulsoryForComp = false; // trzeba zresetowac stan
+            }
+            System.out.println(BoardText.PLAYER_RESULT + getPlayerPawns());
+            System.out.println(BoardText.COMP_RESULT + getCompPawns());
         }
-        System.out.println("bye bye");
+        gemeResult();
+    }
+
+    private void gemeResult() {
+        if (getCompPawns() == 0) {
+            System.out.println(BoardText.PLAYER_WIN);
+        } else if (getPlayerPawns() == 0) {
+            System.out.println(BoardText.PLAYER_LOST);
+        }
+    }
+
+    private int getPlayerPawns() { // zwraca ilosc pionkow gracza
+        int tempPawnNr = 0;
+        for (int i = 0; i < board.getBoard().length; i++) {
+            for (int j = 0; j < board.getBoard().length; j++) {
+                if (board.getBoard()[i][j].isPlayer()) {
+                    tempPawnNr++;
+                }
+            }
+        }
+        return tempPawnNr;
+    }
+
+    private int getCompPawns() { // zwraca ilosc pionkow kompa
+        int tempPawnNr = 0;
+        for (int i = 0; i < board.getBoard().length; i++) {
+            for (int j = 0; j < board.getBoard().length; j++) {
+                if (board.getBoard()[i][j].isComp()) {
+                    tempPawnNr++;
+                }
+            }
+        }
+        return tempPawnNr;
     }
 
     private void compCompulsoryBeat() {
@@ -121,14 +123,12 @@ public class Game {
         compPawnColumn = tempObjectForCords.getY();
     }
 
-
     private void tryToCompulsoryBeat() { // sprawdzam czy gdzies wystapi musowe bicie dla playera
         for (int i = 0; i < board.getBoard().length; i++) {
             for (int j = 0; j < board.getBoard().length; j++) { // przelatuje po pionkach i sprawdzam czy sa to playery
-                if(board.getBoard()[i][j].isKing() && board.compulsoryPlayerKingMove(i, j)){ // tu dla damki
+                if (board.getBoard()[i][j].isKing() && board.compulsoryPlayerKingMove(i, j)) { // tu dla damki
                     wasCompulsoryForPlayer = true;
-                }
-                else if (board.getBoard()[i][j].isPlayer() && board.compulsoryPlayerMove(i, j)) { // jezeli player i dostane true z musowego bicia
+                } else if (board.getBoard()[i][j].isPlayer() && board.compulsoryPlayerMove(i, j)) { // jezeli player i dostane true z musowego bicia
                     wasCompulsoryForPlayer = true; // zmienia mi stan na true
                 }
             }

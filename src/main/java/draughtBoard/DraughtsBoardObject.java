@@ -30,10 +30,6 @@ public class DraughtsBoardObject {
         isSquare = square;
     }
 
-    public boolean isPawn() {
-        return isPawn;
-    }
-
     public boolean isSquare() {
         return isSquare;
     }
@@ -93,7 +89,7 @@ public class DraughtsBoardObject {
 
     // tymczasowe do usuniecia
 
-    public String getInfoPionka(){
+    public String getInfoPionka() {
         return this.name + " " + "(" + this.x + ", " + this.y + ")";
     }
 }
