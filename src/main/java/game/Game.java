@@ -36,7 +36,8 @@ public class Game {
         board.tempRemovePawn(3,4);
         board.tempRemovePawn(3,6);
         board.tempRemovePawn(3,8);
-        board.tempCompPawnAdd(2,3);
+        board.tempCompPawnAdd(3,4);
+        board.tempCompPawnAdd(3,2);
 
         board.printBoard();
 

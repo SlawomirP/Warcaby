@@ -215,25 +215,104 @@ public class DraughtBoard {
 
     public boolean compulsoryPlayerKingMove(int pawnRow, int pawnColumn) {
         boolean result = false;
+        //leftUp
         if (checkCompPawnAvailibilityLeftUp(pawnRow, pawnColumn) && board[pawnRow][pawnColumn].isKing()) { // jezeli w strone leftUp znajdzie sie komp
             int tempRow = returnFirsCompPawnCordsLeftUp(pawnRow, pawnColumn)[0]; // pobieram cordy znalezionego compa
             int tempColumn = returnFirsCompPawnCordsLeftUp(pawnRow, pawnColumn)[1];
             int tempRowS = tempRow - 1; // odejmuje 1 bo chce sprawdzic pole za nim w leftUp
             int tempColumnS = tempColumn - 1;
-            if (board[tempRowS][tempColumnS].isSquare() && board[tempRowS][tempColumnS].isAvailable()) { // i je sprawdzam, jezeli jest ok to bicie
-                playerKingToSquare(pawnRow, pawnColumn); //damka w pole
-                pawnToSquare(tempRow,tempColumn);//comp w pole
-                squareToPlayerKing(tempRowS,tempColumnS);//pole w damke
-                result = true;
-            }
+            result = changesInCaseKingBeat(pawnRow, pawnColumn, tempRowS, tempColumnS, tempRow, tempColumn, result);
+        }
+        //leftDown
+        else if(checkCompPawnAvailibilityLeftDown(pawnRow, pawnColumn) && board[pawnRow][pawnColumn].isKing()){
+            int tempRow = returnFirsCompPawnCordsLeftDown(pawnRow, pawnColumn)[0];
+            int tempColumn = returnFirsCompPawnCordsLeftDown(pawnRow, pawnColumn)[1];
+            int tempRowS = tempRow + 1;
+            int tempColumnS = tempColumn - 1;
+            result = changesInCaseKingBeat(pawnRow, pawnColumn, tempRowS, tempColumnS, tempRow, tempColumn, result);
+        }
+        //rihtUp
+        else if(checkCompPawnAvailibilityRightUp(pawnRow, pawnColumn) && board[pawnRow][pawnColumn].isKing()){
+            int tempRow = returnFirsCompPawnCordsRightUp(pawnRow, pawnColumn)[0];
+            int tempColumn = returnFirsCompPawnCordsRightUp(pawnRow, pawnColumn)[1];
+            int tempRowS = tempRow - 1;
+            int tempColumnS = tempColumn + 1;
+            result = changesInCaseKingBeat(pawnRow, pawnColumn, tempRowS, tempColumnS, tempRow, tempColumn, result);
+        }
+        //rightDown
+        else if(checkCompPawnAvailibilityRightDown(pawnRow, pawnColumn) && board[pawnRow][pawnColumn].isKing()){
+            int tempRow = returnFirsCompPawnCordsRightDown(pawnRow, pawnColumn)[0];
+            int tempColumn = returnFirsCompPawnCordsRightDown(pawnRow, pawnColumn)[1];
+            int tempRowS = tempRow + 1;
+            int tempColumnS = tempColumn + 1;
+            result = changesInCaseKingBeat(pawnRow, pawnColumn, tempRowS, tempColumnS, tempRow, tempColumn, result);
         }
         return result;
     }
+
+    private boolean changesInCaseKingBeat(int pawnRow, int pawnColumn, int tempRowS, int tempColumnS, int tempRow, int tempColumn, boolean result) {
+        if (board[tempRowS][tempColumnS].isSquare() && board[tempRowS][tempColumnS].isAvailable()) { // sprawdzam czy pole za pionkiem jest wolne, jezeli tak to bicie
+            playerKingToSquare(pawnRow, pawnColumn); //damka w pole
+            pawnToSquare(tempRow, tempColumn);//comp w pole
+            squareToPlayerKing(tempRowS, tempColumnS);//pole w damke
+            result = true;
+        }
+        return result;
+    }
+
     private int[] returnFirsCompPawnCordsLeftUp(int pawnRow, int pawnColumn) {
         int[] temp = new int[2];
         for (int i = 0; i < 7; i++) {
             pawnRow--;
             pawnColumn--;
+            if (!board[pawnRow][pawnColumn].isAvailable()) {
+                break;
+            }
+            if (board[pawnRow][pawnColumn].isComp()) {
+                temp[0] = pawnRow;
+                temp[1] = pawnColumn;
+                break;
+            }
+        }
+        return temp;
+    }
+    private int[] returnFirsCompPawnCordsLeftDown(int pawnRow, int pawnColumn) {
+        int[] temp = new int[2];
+        for (int i = 0; i < 7; i++) {
+            pawnRow++;
+            pawnColumn--;
+            if (!board[pawnRow][pawnColumn].isAvailable()) {
+                break;
+            }
+            if (board[pawnRow][pawnColumn].isComp()) {
+                temp[0] = pawnRow;
+                temp[1] = pawnColumn;
+                break;
+            }
+        }
+        return temp;
+    }
+    private int[] returnFirsCompPawnCordsRightUp(int pawnRow, int pawnColumn) {
+        int[] temp = new int[2];
+        for (int i = 0; i < 7; i++) {
+            pawnRow--;
+            pawnColumn++;
+            if (!board[pawnRow][pawnColumn].isAvailable()) {
+                break;
+            }
+            if (board[pawnRow][pawnColumn].isComp()) {
+                temp[0] = pawnRow;
+                temp[1] = pawnColumn;
+                break;
+            }
+        }
+        return temp;
+    }
+    private int[] returnFirsCompPawnCordsRightDown(int pawnRow, int pawnColumn) {
+        int[] temp = new int[2];
+        for (int i = 0; i < 7; i++) {
+            pawnRow++;
+            pawnColumn++;
             if (!board[pawnRow][pawnColumn].isAvailable()) {
                 break;
             }
@@ -251,6 +330,51 @@ public class DraughtBoard {
         for (int i = 0; i < 7; i++) {
             pawnRow--;
             pawnColumn--;
+            if (!board[pawnRow][pawnColumn].isAvailable()) { // w przypadku dojscia do ramki break
+                break;
+            }
+            if (board[pawnRow][pawnColumn].isComp()) {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+    private boolean checkCompPawnAvailibilityLeftDown(int pawnRow, int pawnColumn) { // sprawdzam czy jest komp na drodze damki
+        boolean result = false;
+        for (int i = 0; i < 7; i++) {
+            pawnRow++;
+            pawnColumn--;
+            if (!board[pawnRow][pawnColumn].isAvailable()) { // w przypadku dojscia do ramki break
+                break;
+            }
+            if (board[pawnRow][pawnColumn].isComp()) {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+    private boolean checkCompPawnAvailibilityRightUp(int pawnRow, int pawnColumn) { // sprawdzam czy jest komp na drodze damki
+        boolean result = false;
+        for (int i = 0; i < 7; i++) {
+            pawnRow--;
+            pawnColumn++;
+            if (!board[pawnRow][pawnColumn].isAvailable()) { // w przypadku dojscia do ramki break
+                break;
+            }
+            if (board[pawnRow][pawnColumn].isComp()) {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+    private boolean checkCompPawnAvailibilityRightDown(int pawnRow, int pawnColumn) { // sprawdzam czy jest komp na drodze damki
+        boolean result = false;
+        for (int i = 0; i < 7; i++) {
+            pawnRow++;
+            pawnColumn++;
             if (!board[pawnRow][pawnColumn].isAvailable()) { // w przypadku dojscia do ramki break
                 break;
             }
