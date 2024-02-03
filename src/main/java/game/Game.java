@@ -36,6 +36,7 @@ public class Game {
         board.tempRemovePawn(3,4);
         board.tempRemovePawn(3,6);
         board.tempRemovePawn(3,8);
+        board.tempCompPawnAdd(2,3);
 
         board.printBoard();
 
@@ -43,6 +44,7 @@ public class Game {
 
             //częśc playera
             System.out.println("--------------- moj ruch");
+
             if (board.getNumberOfCompPawns() != 0) { // w sumie niepotrzebny warunek, do usuniecia
                 for (int i = 0; i < 4; i++) {
                     tryToCompulsoryBeat(); // sprawdzam mozliwosc bicia dla playera na wszelki wypadek 4 razy bo jak bedzie bicie to moze jest kolejne
@@ -122,7 +124,10 @@ public class Game {
     private void tryToCompulsoryBeat() { // sprawdzam czy gdzies wystapi musowe bicie dla playera
         for (int i = 0; i < board.getBoard().length; i++) {
             for (int j = 0; j < board.getBoard().length; j++) { // przelatuje po pionkach i sprawdzam czy sa to playery
-                if (board.getBoard()[i][j].isPlayer() && board.compulsoryPlayerMove(i, j)) { // jezeli player i dostane true z musowego bicia
+                if(board.getBoard()[i][j].isKing() && board.compulsoryPlayerKingMove(i, j)){ // tu dla damki
+                    wasCompulsoryForPlayer = true;
+                }
+                else if (board.getBoard()[i][j].isPlayer() && board.compulsoryPlayerMove(i, j)) { // jezeli player i dostane true z musowego bicia
                     wasCompulsoryForPlayer = true; // zmienia mi stan na true
                 }
             }
